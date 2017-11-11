@@ -101,7 +101,53 @@ leaves.each do |node|
   puts "#{node.name}: #{node.text}" unless node.text.empty?
 end
 
+leaves = doc.xpath('response//data//median//firstView//TTFB')
+leaves.each do |node|
+  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  # => First Byte
+end
 
+leaves = doc.xpath('response//data//median//firstView//render')
+leaves.each do |node|
+  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  # => Start Render
+end
+
+
+leaves = doc.xpath('response//data//median//firstView//SpeedIndex')
+leaves.each do |node|
+  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  # => Speed Index
+end
+
+################################
+# DOM Elements
+################################
+
+leaves = doc.xpath('response//data//median//firstView//docComplete')
+leaves.each do |node|
+  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  # => Time
+end
+
+
+leaves = doc.xpath('response//data//median//firstView//bytesInDoc')
+leaves.each do |node|
+  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  # => Requests
+end
+
+leaves = doc.xpath('response//data//median//firstView//requestsDoc')
+leaves.each do |node|
+  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  # => Bytes In
+end
+
+leaves = doc.xpath('response//data//median//firstView//fullyLoaded')
+leaves.each do |node|
+  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  # => Time (Fully Loaded)
+end
 
 
 
