@@ -5,8 +5,7 @@ require 'open-uri'
 require 'uri'
 require 'selenium-webdriver'
 require_relative 'SimpleMailerurl'
-require 'rexml/document' 
-include REXML
+
 
 # @driver is an instance variable
 @driver = Selenium::WebDriver.for :firefox
