@@ -90,12 +90,25 @@ parsed_res = Crack::XML.parse(response)          #Parse web page test response N
 status = parsed_res["response"]["statusCode"]    # Assigns the HTTP code to status - this is referred to "walking the tree"
 =end
 
+# Code is for every node inside the tree that is NOT empty
+# Will not use to solve this solution
 
-leaves = doc.xpath('response//data//median//firstView//*[not(*)]')
+#leaves = doc.xpath('response//data//median//firstView//*[not(*)]')
+
+
+leaves = doc.xpath('response//data//median//firstView//loadTime')
 
 leaves.each do |node|
-  puts "#{node[1].name}: #{node[1].text}" unless node.text.empty?
+  puts "#{node.name}: #{node.text}" unless node.text.empty?
 end
+
+
+
+
+
+
+
+
 ################################################################
 # ORIGINAL CODE IDEA FOR ITERATION OF XML NODE 
 ################################################################
