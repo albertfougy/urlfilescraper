@@ -98,25 +98,25 @@ status = parsed_res["response"]["statusCode"]    # Assigns the HTTP code to stat
 leaves = doc.xpath('response//data//median//firstView//loadTime')
 
 leaves.each do |node|
-  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  puts "#{node.name}: #{node.text}" 
 end
 
 leaves = doc.xpath('response//data//median//firstView//TTFB')
 leaves.each do |node|
-  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  puts "#{node.name}: #{node.text}" 
   # => First Byte
 end
 
 leaves = doc.xpath('response//data//median//firstView//render')
 leaves.each do |node|
-  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  puts "#{node.name}: #{node.text}"
   # => Start Render
 end
 
 
 leaves = doc.xpath('response//data//median//firstView//SpeedIndex')
 leaves.each do |node|
-  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  puts "#{node.name}: #{node.text}" 
   # => Speed Index
 end
 
@@ -124,33 +124,36 @@ end
 # DOM Elements
 ################################
 
-leaves = doc.xpath('response//data//median//firstView//docComplete')
+# THIS NODE IS NOT OUTPUTING
+leaves = doc.xpath('response//data//median//firstView//docTime')
 leaves.each do |node|
-  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  puts "#{node.name}: #{node.text}" #unless node.text.empty?
   # => Time
 end
 
 
 leaves = doc.xpath('response//data//median//firstView//bytesInDoc')
 leaves.each do |node|
-  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  puts "#{node.name}: #{node.text}" 
   # => Requests
 end
 
 leaves = doc.xpath('response//data//median//firstView//requestsDoc')
 leaves.each do |node|
-  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  puts "#{node.name}: #{node.text}" #
   # => Bytes In
 end
 
 leaves = doc.xpath('response//data//median//firstView//fullyLoaded')
 leaves.each do |node|
-  puts "#{node.name}: #{node.text}" unless node.text.empty?
+  puts "#{node.name}: #{node.text}" 
   # => Time (Fully Loaded)
 end
 
 
-
+# Extract Data and assign to a hash
+# assign a hash to a variable containing data
+# use the variable and pass it the email container
 
 
 
