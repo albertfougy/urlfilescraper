@@ -26,20 +26,6 @@ File.open("urls.txt", "r") do |file_handle|
 end
 
 
-# first let's try by selecting by element instead of xpath
-# Xpath version
-# element of the browser
-# //*[(@id = "browser")]
-# path of the selection
-# //*[@id="browser"]/option[6]
-
-# select and click dropdown menu
-# dropDownMenu = @driver.find_element(:class, 'browser')
-# option = Selenium::WebDriver::Support::Select.new(dropDownMenu)
-# option.select_by(:text, 'Billing to Shipping')
-# option.select_by(:value, 'Billing to Shipping')
-
-
 
 # strip down version from above without looping
 option = Selenium::WebDriver::Support::Select.new(@driver.find_element(name: 'browser'))
@@ -53,12 +39,16 @@ wait.until {
   @driver.find_element(:id, 'test_results-container')
 }
 
+################################################
+# Change 'result' url parameter into 'xmlResult' 
+# to read XML Version of webpagetest.org
+################################################
 result_url= @driver.current_url
 xml_url = result_url.gsub('result', 'xmlResult')
 doc = Nokogiri::XML(open(xml_url))
 
 ##########################################################
-# Create a function in this section
+# Create a function in this section?
 # Pass an argument here to the XML Parser from Mail
 # THIS WILL BE THE MAIN CONTROL STATEMENT
 #########################################################
@@ -69,31 +59,28 @@ doc = Nokogiri::XML(open(xml_url))
 
 # The fields that I need to extract the data
 
+
 # Load Time, First Byte,
 # Start Render, Speed Index, DOM Elements, Time (Fully
 # Loaded)
 
+#############################################################
+# ATTEMPTED REFACTOR : FAIL!
+#############################################################
 
-###################################
-# DO NOT USE THIS SAMPLE CODE
-##################################
+# doc.xpath('response//data//median//firstView//*[not(*)]').each do |webtest|
+#   information = {
+#     'Load Time':webtest.at_xpath("response//data//median//firstView//*[text()='loadTime']")
+#     }.to_a.join(":#{webtest.text} ")
+#   puts information
 
+# end
 
-=begin
-You are well on your way to learning the basics of coding for real :-) 
-What you are doing is looping over all of the nodes of the API response. 
-It is actually much simpler than that, down the road you will need to iterate over the entire API response for solving issues. 
-For now though all you do is grab the couple of values that we care about ( just a few from the UI ), like LoadTime, TimeToFirstByte...etc.
-
-parsed_res = Crack::XML.parse(response)          #Parse web page test response NOTE: you don't have to use Crack I am just giving an example
-status = parsed_res["response"]["statusCode"]    # Assigns the HTTP code to status - this is referred to "walking the tree"
-=end
-
-# Code is for every node inside the tree that is NOT empty
-# Will not use to solve this solution
-
-#leaves = doc.xpath('response//data//median//firstView//*[not(*)]')
-
+###############################################################
+# OUTPUTTING AS NORMAL, BUT CANNOT PASS TO EMAIL SCRIPT WITHOUT
+# FIGURING OUT HOW TO REFACTOR ASSIGN ALL THE DATA TO A VARIABLE
+# THEN PASS TO EMAIL BLOCK BELOW
+###############################################################
 
 leaves = doc.xpath('response//data//median//firstView//loadTime')
 
@@ -120,11 +107,10 @@ leaves.each do |node|
   # => Speed Index
 end
 
-################################
-# DOM Elements
-################################
+# ################################
+# # DOM Elements
+# ################################
 
-# THIS NODE IS NOT OUTPUTING
 leaves = doc.xpath('response//data//median//firstView//docTime')
 leaves.each do |node|
   puts "#{node.name}: #{node.text}" #unless node.text.empty?
@@ -155,23 +141,10 @@ end
 # assign a hash to a variable containing data
 # use the variable and pass it the email container
 
-
-
-################################################################
-# ORIGINAL CODE IDEA FOR ITERATION OF XML NODE 
-################################################################
-# doc.xpath('response//data//median//firstView').each do |firstview_element|
-#   puts firstview_element.text
-#   puts firstview_element.xpath('loadTime').text
-  #putsfirstview_element.xpath[0].text
-  # count=1
-  # sitcom_element.xpath('characters/character').each do
-  #   |character_element|
-  #   puts "    #{count}.character : " + character_element.text
-  #   count=count+1
-  # end
-# end
-
+###################################################
+# OLD SCRIPT ATTEMPT FOR 1 NODE. OBSOLETE, BUT KEPT
+# AS AN IDEA FOR REFACTORING ON THIS IDEA. 
+# PLEASE IGNORE
 
 ####################################################
 
@@ -182,53 +155,13 @@ end
 #           .map(&:text).join(' ')
 
 # #########################################################
-# xpath of the main table we want to grab the results from
-# #########################################################
-
-# rows =doc.xpath('//*[@id="tableResults"]/tbody')
-# rows =doc.xpath('response//data//average//firstView')
-# //*[@id="tableResults"]/tbody/tr[2]/th[2]
-
-
-
-
-# details = rows.collect do |row|
-#   detail = {}
-#   [
-#     [:LoadTime, 'response//data//average//firstView//loadTime'],
-
-# # //*[@id="LoadTime"]
-
-# #     [:name, 'td[3]/div[2]/span/a/text()'],
-# #     [:date, 'td[4]/text()'],
-# #     [:time, 'td[4]/span/text()'],
-# #     [:number, 'td[5]/a/text()'],
-# #     [:views, 'td[6]/text()'],
-
-
-# ].each do |name, xpath|
-#     detail[name] = row.at_xpath(xpath).to_s.strip
-#   end
-#   detail
-# end
-# pp details
-
-
-# => [{:time=>"23:35",
-# =>   :title=>"Vb4 Gold Released",
-# =>   :number=>"24",
-# =>   :date=>"06 Jan 2010",
-# =>   :views=>"1,320",
-# =>   :name=>"Paul M"}]
-
-# #########################################################
 
 
 
 ############################################################################
 
 # CURRENT WORKING CODE SNIPPET
-# LOAD VIEW ONLY
+# WORKS FOR 1 NODE 'loadTime'
 
 ############################################################################
 
@@ -243,8 +176,9 @@ end
 # output desired is: => google.com Load Time seconds_in_numbers
 
 ##########################################################################
-# Call a function inside mail script to XML Parser
-# DELIVER MAIL SECTION
+# Call a function TO MAIL OR PASS A VARIABLE FROM XML Parser
+# WORKS ONLY FOR 1 NODE => 'loadTime'
+# MAIL SECTION
 #########################################################################
 
 # email = SimpleMailer.simple_message('al@fougy.com'\
@@ -254,14 +188,9 @@ end
 # email.deliver
 ##########################################################################
 
-# dirty string interpolation
-# will refactor inserting HTML header one day.
-
-# working on new script
-# puts "#{details}"
-##################
-# PRINT TO SCREEN
-##################
+########################################
+# PRINT TO SCREEN. WORKS ONLY FOR 1 NODE
+#########################################
 # puts "#{url} Load Time #{load_time}"
 
 @driver.close
