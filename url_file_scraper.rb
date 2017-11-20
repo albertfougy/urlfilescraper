@@ -53,10 +53,7 @@ doc = Nokogiri::XML(open(xml_url))
 # THIS WILL BE THE MAIN CONTROL STATEMENT
 #########################################################
 
-
-
 # You need to MATCH SPECIFIC NODE NAME and NODE TEXT
-
 # The fields that I need to extract the data
 
 
@@ -76,85 +73,28 @@ doc = Nokogiri::XML(open(xml_url))
 
 # end
 
-###############################################################
-# OUTPUTTING AS NORMAL, BUT CANNOT PASS TO EMAIL SCRIPT WITHOUT
-# FIGURING OUT HOW TO REFACTOR ASSIGN ALL THE DATA TO A VARIABLE
-# THEN PASS TO EMAIL BLOCK BELOW
-###############################################################
-
-leaves = doc.xpath('response//data//median//firstView//loadTime')
-
-leaves.each do |node|
-  puts "#{node.name}: #{node.text}" 
-end
-
-leaves = doc.xpath('response//data//median//firstView//TTFB')
-leaves.each do |node|
-  puts "#{node.name}: #{node.text}" 
-  # => First Byte
-end
-
-leaves = doc.xpath('response//data//median//firstView//render')
-leaves.each do |node|
-  puts "#{node.name}: #{node.text}"
-  # => Start Render
-end
-
-
-leaves = doc.xpath('response//data//median//firstView//SpeedIndex')
-leaves.each do |node|
-  puts "#{node.name}: #{node.text}" 
-  # => Speed Index
-end
-
-# ################################
-# # DOM Elements
-# ################################
-
-leaves = doc.xpath('response//data//median//firstView//docTime')
-leaves.each do |node|
-  puts "#{node.name}: #{node.text}" #unless node.text.empty?
-  # => Time
-end
-
-
-leaves = doc.xpath('response//data//median//firstView//bytesInDoc')
-leaves.each do |node|
-  puts "#{node.name}: #{node.text}" 
-  # => Requests
-end
-
-leaves = doc.xpath('response//data//median//firstView//requestsDoc')
-leaves.each do |node|
-  puts "#{node.name}: #{node.text}" #
-  # => Bytes In
-end
-
-leaves = doc.xpath('response//data//median//firstView//fullyLoaded')
-leaves.each do |node|
-  puts "#{node.name}: #{node.text}" 
-  # => Time (Fully Loaded)
-end
-
 
 # Extract Data and assign to a hash
 # assign a hash to a variable containing data
 # use the variable and pass it the email container
 
 ###################################################
-# OLD SCRIPT ATTEMPT FOR 1 NODE. OBSOLETE, BUT KEPT
-# AS AN IDEA FOR REFACTORING ON THIS IDEA. 
-# PLEASE IGNORE
-
+# REDUCED RESULTS TO ONE BLOCK 
 ####################################################
 
-# I think I need to separate the ‘content’ into ‘url’ and ‘load_time’
-# content = doc
-#           .xpath('response//data//testUrl'\
-#           , 'response//data//average//firstView//loadTime')
-#           .map(&:text).join(' ')
+  results = {}
+  results[:load_time] = doc.xpath('response//data//median//firstView//loadTime').text
+  results[:first_byte] = doc.xpath('response//data//median//firstView//TTFB').text
+  results[:start_render] = doc.xpath('response//data//median//firstView//render').text
+  results[:speed_index] = doc.xpath('response//data//median//firstView//SpeedIndex').text
+  results[:dom_elements] = doc.xpath('response//data//median//firstView//domElements').text
+  results[:time_fully_loaded] = doc.xpath('response//data//median//firstView//fullyLoaded').text
+  puts results
 
-# #########################################################
+
+# {:load_time=>"1839", :first_byte=>"370", :start_render=>"669", :speed_index=>"1173",\
+# :dom_elements=>"379", :time_fully_loaded=>"4524"}
+
 
 
 
