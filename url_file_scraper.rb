@@ -7,15 +7,15 @@ require 'selenium-webdriver'
 require_relative 'SimpleMailerurl'
 
 
-# @driver is an instance variable
+# Load the page and navigate
 @driver = Selenium::WebDriver.for :firefox
 @driver.navigate.to 'http://www.webpagetest.org'
 wait = Selenium::WebDriver::Wait.new(:timeout => 5)
 
-input = wait.until {
+input = wait.until do
   element = @driver.find_element(:id, 'url')
   element if element.displayed?
-}
+end
 @driver.find_element(:id, 'url').clear
 
 
@@ -30,14 +30,9 @@ end
 # strip down version from above without looping
 option = Selenium::WebDriver::Support::Select.new(@driver.find_element(name: 'browser'))
 option.select_by(:value, 'IE11')
-
-
 @driver.find_element(:id, 'start_test-container').click
-
 wait = Selenium::WebDriver::Wait.new(:timeout => 450) # seconds
-wait.until {
-  @driver.find_element(:id, 'test_results-container')
-}
+wait.until {@driver.find_element(:id, 'test_results-container')}
 
 ################################################
 # Change 'result' url parameter into 'xmlResult' 
@@ -96,8 +91,6 @@ doc = Nokogiri::XML(open(xml_url))
 # :dom_elements=>"379", :time_fully_loaded=>"4524"}
 
 
-
-
 ############################################################################
 
 # CURRENT WORKING CODE SNIPPET
@@ -116,16 +109,13 @@ doc = Nokogiri::XML(open(xml_url))
 # output desired is: => google.com Load Time seconds_in_numbers
 
 ##########################################################################
-# Call a function TO MAIL OR PASS A VARIABLE FROM XML Parser
-# WORKS ONLY FOR 1 NODE => 'loadTime'
 # MAIL SECTION
 #########################################################################
 
-# email = SimpleMailer.simple_message('al@fougy.com'\
-#                                    , 'The script works for me.'\
-#                                    , "#{url} Load Time #{load_time}")
-#                                      #,"#{details}")
-# email.deliver
+email = SimpleMailer.simple_message('al@fougy.com'\
+                                    ,'email trail run of hash.'\
+                                    ,"#{results}")
+email.deliver
 ##########################################################################
 
 ########################################
