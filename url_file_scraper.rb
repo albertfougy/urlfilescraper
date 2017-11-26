@@ -10,13 +10,17 @@ require_relative 'SimpleMailerurl'
 # Load the page and navigate
 @driver = Selenium::WebDriver.for :firefox
 @driver.navigate.to 'http://www.webpagetest.org'
-wait = Selenium::WebDriver::Wait.new(:timeout => 5)
+wait = Selenium::WebDriver::Wait.new(:timeout => 450)
+
 
 input = wait.until do
   element = @driver.find_element(:id, 'url')
   element if element.displayed?
 end
 @driver.find_element(:id, 'url').clear
+
+
+
 
 
 File.open("urls.txt", "r") do |file_handle|
@@ -40,6 +44,10 @@ wait.until {@driver.find_element(:id, 'test_results-container')}
 ################################################
 result_url= @driver.current_url
 xml_url = result_url.gsub('result', 'xmlResult')
+
+
+
+
 doc = Nokogiri::XML(open(xml_url))
 
 ##########################################################
@@ -50,8 +58,6 @@ doc = Nokogiri::XML(open(xml_url))
 
 # You need to MATCH SPECIFIC NODE NAME and NODE TEXT
 # The fields that I need to extract the data
-
-
 # Load Time, First Byte,
 # Start Render, Speed Index, DOM Elements, Time (Fully
 # Loaded)
@@ -112,8 +118,8 @@ doc = Nokogiri::XML(open(xml_url))
 # MAIL SECTION
 #########################################################################
 
-email = SimpleMailer.simple_message('al@fougy.com'\
-                                    ,'email trail run of hash.'\
+email = SimpleMailer.simple_message('al@fougy.com '\
+                                    ,'email trail run of hash. 1 domain only'\
                                     ,"#{results}")
 email.deliver
 ##########################################################################
