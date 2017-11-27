@@ -110,9 +110,9 @@ def return_results(xml_url)
   puts results
 end
 
-# {:load_time=>"1839", :first_byte=>"370", :start_render=>"669", :speed_index=>"1173",\
-# :dom_elements=>"379", :time_fully_loaded=>"4524"}
-
+# {:load_time=>"1891", :first_byte=>"401", :start_render=>"793", :speed_index=>"996", :dom_elements=>"420", :time_fully_loaded=>"3825"}
+# {:load_time=>"17029", :first_byte=>"567", :start_render=>"2184", :speed_index=>"13849", :dom_elements=>"3617", :time_fully_loaded=>"48256"}
+# => {"www.google.com"=>nil, "www.techcrunch.com"=>nil}
 
 ############################################################################
 
