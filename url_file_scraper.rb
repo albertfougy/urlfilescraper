@@ -6,49 +6,64 @@ require 'uri'
 require 'selenium-webdriver'
 require_relative 'SimpleMailerurl'
 
-
-# Load the page and navigate
-@driver = Selenium::WebDriver.for :firefox
-@driver.navigate.to 'http://www.webpagetest.org'
-wait = Selenium::WebDriver::Wait.new(:timeout => 450)
+# To run script
+# $:~/urlfilescraper$ irb -r ./url_file_scraper.rb
+# irb(main):001:0> email_send(results)
 
 
-input = wait.until do
-  element = @driver.find_element(:id, 'url')
-  element if element.displayed?
+def get_xml_url(url)
+
+  @driver = Selenium::WebDriver.for :firefox
+  @driver.navigate.to 'http://www.webpagetest.org'
+  wait = Selenium::WebDriver::Wait.new(:timeout => 450)
+
+
+  #input = wait.until do
+  input_url = @driver.find_element(:id, 'url')
+  #  element if element.displayed?
+  #end
+  input_url.clear();
+  input_url.send_keys(url.to_s)
+  @driver.find_element(:id, 'start_test-container').click
+
+  # Wait until results to appear
+  wait.until {@driver.find_element(:id, 'test_results-container')}
+  ################################################
+  # Change 'result' url parameter into 'xmlResult' 
+  # to read XML Version of webpagetest.org
+  ################################################
+  result_url= @driver.current_url
+  @driver.close
+  result_url.gsub('result', 'xmlResult')
 end
-@driver.find_element(:id, 'url').clear
 
 
-
-
-
-File.open("urls.txt", "r") do |file_handle|
-  file_handle.each_line do |line|
-  input.send_keys(line)
+def run
+  all_results = {}
+  File.open("urls.txt", "r") do |file_handle|
+    file_handle.each_line do |line|
+      xml_url = get_xml_url(line)
+      host = URI.parse(line.strip).host.downcase # need to refactor for malform links
+      all_results[host] = return_results(xml_url)
+    end
   end
+  all_results
 end
 
-
-
-# strip down version from above without looping
-option = Selenium::WebDriver::Support::Select.new(@driver.find_element(name: 'browser'))
-option.select_by(:value, 'IE11')
-@driver.find_element(:id, 'start_test-container').click
-wait = Selenium::WebDriver::Wait.new(:timeout => 450) # seconds
-wait.until {@driver.find_element(:id, 'test_results-container')}
-
-################################################
-# Change 'result' url parameter into 'xmlResult' 
-# to read XML Version of webpagetest.org
-################################################
-result_url= @driver.current_url
-xml_url = result_url.gsub('result', 'xmlResult')
+######################################################################
+# strip down version from above without looping. Select browser type
+########################################################################
+# option = Selenium::WebDriver::Support::Select.new(@driver.find_element(name: 'browser'))
+# option.select_by(:value, 'IE11')
+# @driver.find_element(:id, 'start_test-container').click
+# wait = Selenium::WebDriver::Wait.new(:timeout => 450) # seconds
 
 
 
 
-doc = Nokogiri::XML(open(xml_url))
+
+
+
 
 ##########################################################
 # Create a function in this section?
@@ -82,6 +97,8 @@ doc = Nokogiri::XML(open(xml_url))
 ###################################################
 # REDUCED RESULTS TO ONE BLOCK 
 ####################################################
+def return_results(xml_url)
+  doc = Nokogiri::XML(open(xml_url))
 
   results = {}
   results[:load_time] = doc.xpath('response//data//median//firstView//loadTime').text
@@ -91,7 +108,7 @@ doc = Nokogiri::XML(open(xml_url))
   results[:dom_elements] = doc.xpath('response//data//median//firstView//domElements').text
   results[:time_fully_loaded] = doc.xpath('response//data//median//firstView//fullyLoaded').text
   puts results
-
+end
 
 # {:load_time=>"1839", :first_byte=>"370", :start_render=>"669", :speed_index=>"1173",\
 # :dom_elements=>"379", :time_fully_loaded=>"4524"}
@@ -118,10 +135,10 @@ doc = Nokogiri::XML(open(xml_url))
 # MAIL SECTION
 #########################################################################
 
-email = SimpleMailer.simple_message('al@fougy.com '\
-                                    ,'email trail run of hash. 1 domain only'\
-                                    ,"#{results}")
-email.deliver
+#email = SimpleMailer.simple_message('al@fougy.com '\
+#                                    ,'email trail run of hash. 1 domain only'\
+#                                    ,"#{results}")
+#email.deliver
 ##########################################################################
 
 ########################################
@@ -129,4 +146,3 @@ email.deliver
 #########################################
 # puts "#{url} Load Time #{load_time}"
 
-@driver.close
