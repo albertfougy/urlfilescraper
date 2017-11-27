@@ -8,7 +8,7 @@ require_relative 'SimpleMailerurl'
 
 # To run script
 # $:~/urlfilescraper$ irb -r ./url_file_scraper.rb
-# irb(main):001:0> email_send(results)
+# irb(main):001:0> run()
 
 
 def get_xml_url(url)
@@ -25,6 +25,14 @@ def get_xml_url(url)
   input_url.clear();
   input_url.send_keys(url.to_s)
   @driver.find_element(:id, 'start_test-container').click
+
+  ######################################################################
+# Select browser type . Need work into this script somehow.
+########################################################################
+# option = Selenium::WebDriver::Support::Select.new(@driver.find_element(name: 'browser'))
+# option.select_by(:value, 'IE11')
+# @driver.find_element(:id, 'start_test-container').click
+# wait = Selenium::WebDriver::Wait.new(:timeout => 450) # seconds
 
   # Wait until results to appear
   wait.until {@driver.find_element(:id, 'test_results-container')}
@@ -50,21 +58,9 @@ def run
   all_results
 end
 
-######################################################################
-# strip down version from above without looping. Select browser type
-########################################################################
-# option = Selenium::WebDriver::Support::Select.new(@driver.find_element(name: 'browser'))
-# option.select_by(:value, 'IE11')
-# @driver.find_element(:id, 'start_test-container').click
-# wait = Selenium::WebDriver::Wait.new(:timeout => 450) # seconds
-
-
-
-
-
-
-
-
+###################################################################################################
+# https://stackoverflow.com/questions/6674230/how-would-you-parse-a-url-in-ruby-to-get-the-main-domain
+###################################################################################################
 ##########################################################
 # Create a function in this section?
 # Pass an argument here to the XML Parser from Mail
@@ -76,23 +72,6 @@ end
 # Load Time, First Byte,
 # Start Render, Speed Index, DOM Elements, Time (Fully
 # Loaded)
-
-#############################################################
-# ATTEMPTED REFACTOR : FAIL!
-#############################################################
-
-# doc.xpath('response//data//median//firstView//*[not(*)]').each do |webtest|
-#   information = {
-#     'Load Time':webtest.at_xpath("response//data//median//firstView//*[text()='loadTime']")
-#     }.to_a.join(":#{webtest.text} ")
-#   puts information
-
-# end
-
-
-# Extract Data and assign to a hash
-# assign a hash to a variable containing data
-# use the variable and pass it the email container
 
 ###################################################
 # REDUCED RESULTS TO ONE BLOCK 
@@ -114,23 +93,10 @@ end
 # {:load_time=>"17029", :first_byte=>"567", :start_render=>"2184", :speed_index=>"13849", :dom_elements=>"3617", :time_fully_loaded=>"48256"}
 # => {"www.google.com"=>nil, "www.techcrunch.com"=>nil}
 
-############################################################################
-
-# CURRENT WORKING CODE SNIPPET
-# WORKS FOR 1 NODE 'loadTime'
-
-############################################################################
-
-# url = doc.xpath('response//data//testUrl').text
-# load_time = doc.xpath('response//data//average//firstView//loadTime').text
-
-############################################################################
-
-
-
-# <loadTime> is the name of the tag. Would like to output tag as a string
-# output desired is: => google.com Load Time seconds_in_numbers
-
+#############################################################################
+# Extract Data and assign to a hash
+# assign a hash to a variable containing data
+# use the variable and pass it the email container
 ##########################################################################
 # MAIL SECTION
 #########################################################################
@@ -141,8 +107,4 @@ end
 #email.deliver
 ##########################################################################
 
-########################################
-# PRINT TO SCREEN. WORKS ONLY FOR 1 NODE
-#########################################
-# puts "#{url} Load Time #{load_time}"
 
