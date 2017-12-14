@@ -35,7 +35,9 @@ def get_xml_url(url)
 # wait = Selenium::WebDriver::Wait.new(:timeout => 450) # seconds
 
   # Wait until results to appear
-  wait.until {driver.find_element(:id, 'test_results-container')}
+  wait.until {
+    driver.find_element(:id, 'test_results-container')
+  }
   ################################################
   # Change 'result' url parameter into 'xmlResult'
   # to read XML Version of webpagetest.org
@@ -44,7 +46,6 @@ def get_xml_url(url)
   driver.close
   result_url.gsub('result', 'xmlResult')
 end
-
 
 
 
