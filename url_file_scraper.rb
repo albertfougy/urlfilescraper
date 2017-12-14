@@ -13,18 +13,18 @@ require_relative 'SimpleMailerurl'
 
 def get_xml_url(url)
 
-  @driver = Selenium::WebDriver.for :firefox
-  @driver.navigate.to 'http://www.webpagetest.org'
+  driver = Selenium::WebDriver.for :firefox
+  driver.navigate.to 'http://www.webpagetest.org'
   wait = Selenium::WebDriver::Wait.new(:timeout => 450)
 
 
   #input = wait.until do
-  input_url = @driver.find_element(:id, 'url')
+  input_url = driver.find_element(:id, 'url')
   #  element if element.displayed?
   #end
   input_url.clear();
   input_url.send_keys(url.to_s)
-  @driver.find_element(:id, 'start_test-container').click
+  driver.find_element(:id, 'start_test-container').click
 
   ######################################################################
 # Select browser type . Need work into this script somehow.
@@ -35,28 +35,18 @@ def get_xml_url(url)
 # wait = Selenium::WebDriver::Wait.new(:timeout => 450) # seconds
 
   # Wait until results to appear
-  wait.until {@driver.find_element(:id, 'test_results-container')}
+  wait.until {driver.find_element(:id, 'test_results-container')}
   ################################################
-  # Change 'result' url parameter into 'xmlResult' 
+  # Change 'result' url parameter into 'xmlResult'
   # to read XML Version of webpagetest.org
   ################################################
-  result_url= @driver.current_url
-  @driver.close
+  result_url= driver.current_url
+  driver.close
   result_url.gsub('result', 'xmlResult')
 end
 
 
-def run
-  all_results = {}
-  File.open("urls.txt", "r") do |file_handle|
-    file_handle.each_line do |line|
-      xml_url = get_xml_url(line)
-      host = URI.parse(line.strip).host.downcase # need to refactor for malform links
-      all_results[host] = return_results(xml_url)
-    end
-  end
-  all_results
-end
+
 
 ###################################################################################################
 # https://stackoverflow.com/questions/6674230/how-would-you-parse-a-url-in-ruby-to-get-the-main-domain
@@ -74,7 +64,7 @@ end
 # Loaded)
 
 ###################################################
-# REDUCED RESULTS TO ONE BLOCK 
+# REDUCED RESULTS TO ONE BLOCK
 ####################################################
 def return_results(xml_url)
   doc = Nokogiri::XML(open(xml_url))
@@ -87,6 +77,18 @@ def return_results(xml_url)
   results[:dom_elements] = doc.xpath('response//data//median//firstView//domElements').text
   results[:time_fully_loaded] = doc.xpath('response//data//median//firstView//fullyLoaded').text
   puts results
+end
+
+def run
+  all_results = {}
+  File.open("urls.txt", "r") do |file_handle|
+    file_handle.each_line do |line|
+      xml_url = get_xml_url(line)
+      host = URI.parse(line.strip).host.downcase # need to refactor for malform links
+      all_results[host] = return_results(xml_url)
+    end
+  end
+  all_results
 end
 
 # {:load_time=>"1891", :first_byte=>"401", :start_render=>"793", :speed_index=>"996", :dom_elements=>"420", :time_fully_loaded=>"3825"}
