@@ -18,10 +18,12 @@ def get_xml_url(url)
   wait = Selenium::WebDriver::Wait.new(:timeout => 450)
 
 
-  #input = wait.until do
+######################################################################
+# Select browser type . Need work into this script somehow.
+########################################################################
+  option = Selenium::WebDriver::Support::Select.new(driver.find_element(name: 'browser'))
+  option.select_by(:value, 'IE11')
   input_url = driver.find_element(:id, 'url')
-  #  element if element.displayed?
-  #end
   input_url.clear();
   input_url.send_keys(url.to_s)
   driver.find_element(:id, 'start_test-container').click
@@ -29,7 +31,7 @@ def get_xml_url(url)
   ######################################################################
 # Select browser type . Need work into this script somehow.
 ########################################################################
-# option = Selenium::WebDriver::Support::Select.new(@driver.find_element(name: 'browser'))
+# option = Selenium::WebDriver::Support::Select.new(driver.find_element(name: 'browser'))
 # option.select_by(:value, 'IE11')
 # @driver.find_element(:id, 'start_test-container').click
 # wait = Selenium::WebDriver::Wait.new(:timeout => 450) # seconds
