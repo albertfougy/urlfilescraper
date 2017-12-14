@@ -28,14 +28,6 @@ def get_xml_url(url)
   input_url.send_keys(url.to_s)
   driver.find_element(:id, 'start_test-container').click
 
-  ######################################################################
-# Select browser type . Need work into this script somehow.
-########################################################################
-# option = Selenium::WebDriver::Support::Select.new(driver.find_element(name: 'browser'))
-# option.select_by(:value, 'IE11')
-# @driver.find_element(:id, 'start_test-container').click
-# wait = Selenium::WebDriver::Wait.new(:timeout => 450) # seconds
-
   # Wait until results to appear
   wait.until {
     driver.find_element(:id, 'test_results-container')
@@ -79,7 +71,7 @@ def return_results(xml_url)
   results[:speed_index] = doc.xpath('response//data//median//firstView//SpeedIndex').text
   results[:dom_elements] = doc.xpath('response//data//median//firstView//domElements').text
   results[:time_fully_loaded] = doc.xpath('response//data//median//firstView//fullyLoaded').text
-  puts results
+  results
 end
 
 def run
