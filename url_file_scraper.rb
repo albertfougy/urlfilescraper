@@ -43,9 +43,7 @@ end
 
 
 
-###################################################################################################
-# https://stackoverflow.com/questions/6674230/how-would-you-parse-a-url-in-ruby-to-get-the-main-domain
-###################################################################################################
+
 ##########################################################
 # Create a function in this section?
 # Pass an argument here to the XML Parser from Mail
@@ -74,6 +72,11 @@ def return_results(xml_url)
   results
 end
 
+###################################################################################################
+# https://stackoverflow.com/questions/6674230/how-would-you-parse-a-url-in-ruby-to-get-the-main-domain
+###################################################################################################
+# Challenge to parse with malform url scheme. Cannot find a solution YET. Using http/s standard
+##################################################################################################
 def run
   all_results = {}
   File.open("urls.txt", "r") do |file_handle|
@@ -86,8 +89,10 @@ def run
   all_results
 end
 
-# {:load_time=>"1891", :first_byte=>"401", :start_render=>"793", :speed_index=>"996", :dom_elements=>"420", :time_fully_loaded=>"3825"}
-# {:load_time=>"17029", :first_byte=>"567", :start_render=>"2184", :speed_index=>"13849", :dom_elements=>"3617", :time_fully_loaded=>"48256"}
+# {:load_time=>"1891", :first_byte=>"401", :start_render=>"793", :speed_index=>"996",
+# :dom_elements=>"420", :time_fully_loaded=>"3825"}
+# {:load_time=>"17029", :first_byte=>"567", :start_render=>"2184", :speed_index=>"13849",
+# :dom_elements=>"3617", :time_fully_loaded=>"48256"}
 # => {"www.google.com"=>nil, "www.techcrunch.com"=>nil}
 
 #############################################################################
