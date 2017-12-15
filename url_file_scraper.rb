@@ -81,9 +81,9 @@ def run
   all_results = {}
   File.open("urls.txt", "r") do |file_handle|
     file_handle.each_line do |line|
-      xml_url = get_xml_url(line)
+      nodes = get_xml_url(line)
       host = URI.parse(line.strip).host.downcase # need to refactor for malform links
-      all_results[host] = return_results(xml_url)
+      all_results[host] = return_results(nodes)
     end
   end
   all_results
@@ -104,8 +104,8 @@ end
 #########################################################################
 
 #email = SimpleMailer.simple_message('al@fougy.com '\
-#                                    ,'email trail run of hash. 1 domain only'\
-#                                    ,"#{results}")
+#                                    ,'email trail run of hashes'\
+#                                    ,'#{all_results}')
 #email.deliver
 ##########################################################################
 

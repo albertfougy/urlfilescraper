@@ -1,2 +1,2 @@
-https://www.google.com
-https://techcrunch.com
+http://google.com
+http://www.techcrunch.com
