@@ -8,6 +8,7 @@ ActionMailer::Base.smtp_settings = {
     :user_name => 'mygmailaddress',
     :password => 'app_password_given_by_gmail',
     :authentication => :plain,
+    enable_starttls_auto: true
 }
 
 class SimpleMailer < ActionMailer::Base
