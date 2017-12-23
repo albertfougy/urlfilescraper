@@ -56,44 +56,82 @@ def return_results(xml_url)
 end
 
 
+# def run
+#   all_results = {}
+#   File.open('urls.txt', 'r') do |file_handle|
+#     file_handle.each_line do |line|
+#       xml_url = get_xml_url(line)
+#       host = URI.parse(line.strip).host.downcase # need to refactor for malform links
+#       all_results[host] = return_results(xml_url)
+#     end
+#   end
+#   all_results
+#   # runs barely with this included hack
+#   email = SimpleMailer.simple_message('albert@fougy.com '\
+#                                       , 'email trail run of hashes'\
+#                                       , " #{all_results}")
+#   email.deliver
+# end
+
+# Need to be broken into two more methods. Too long.
 def run
   all_results = {}
+  web_results = ""
   File.open('urls.txt', 'r') do |file_handle|
     file_handle.each_line do |line|
       xml_url = get_xml_url(line)
       host = URI.parse(line.strip).host.downcase # need to refactor for malform links
       all_results[host] = return_results(xml_url)
+      all_results.each do |key, value|
+        value.each do |attri, info|
+          puts "#{key}: #{attri} is #{info}"
+          web_results += "#{key}: #{attri} is #{info} \n"
+        end
+      end
+      web_results
     end
   end
   all_results
-  # runs barely with this included hack
+
+  # hack
   email = SimpleMailer.simple_message('albert@fougy.com '\
                                       , 'email trail run of hashes'\
-                                      , " #{all_results}")
+                                      , "#{web_results}")
   email.deliver
 end
 
-# Results recieved by mail
+# Results by console and email
 
-# irb(main):001:0> run
-# => {"google.com"=>{:load_time=>"985", :first_byte=>"767", :start_render=>"1083",
-#  :speed_index=>"1371",:dom_elements=>"375", :time_fully_loaded=>"2114"},
-#  "www.techcrunch.com"=>{:load_time=>"10848",
-#  :first_byte=>"569", :start_render=>"4286", :speed_index=>"4779",
-# :dom_elements=>"3571", :time_fully_loaded=>"18624"}}
+# 2.4.1 :001 > run
+# google.com: load_time is 1507
+# google.com: first_byte is 513
+# google.com: start_render is 789
+# google.com: speed_index is 965
+# google.com: dom_elements is 375
+# google.com: time_fully_loaded is 1679
+# google.com: load_time is 1507
+# google.com: first_byte is 513
+# google.com: start_render is 789
+# google.com: speed_index is 965
+# google.com: dom_elements is 375
+# google.com: time_fully_loaded is 1679
+# www.techcrunch.com: load_time is 10679
+# www.techcrunch.com: first_byte is 465
+# www.techcrunch.com: start_render is 8562
+# www.techcrunch.com: speed_index is 8584
+# www.techcrunch.com: dom_elements is 3607
+# www.techcrunch.com: time_fully_loaded is 17264
 
-# Pretty printed email send results to console 
+# Pretty printed email send results to console
 
-# => <Mail::Message:70237463212660, Multipart: false, Headers: <Date: Fri, 22 Dec 
-# 2017 18:48:20 -0500>, <From: MYEMAILADDRESS>, <To: RECIPIENT EMAILADDRESS >, 
-# <Message-ID: <5a3d99c41f89a_11a0b3fe16f4417a070239@Als-iMac.fios-router.home.mail>>,
-#  <Subject: email trail run of hashes>, <Mime-Version: 1.0>, <Content-Type: text/plain>, 
-#  <Content-Transfer-Encoding: 7bit>> 
+# => #<Mail::Message:70334122941920, Multipart: false, Headers: <Date: Fri, 22 Dec 2017 20:27:25 -0500>,
+# <From: alfougy@gmail.com>, <To: albert@fougy.com >, <Message-ID:
+# <5a3db0fd788a8_11e8e3ff7f043f78811978@Als-iMac.fios-router.home.mail>>,
+# <Subject: email trail run of hashes>, <Mime-Version: 1.0>, <Content-Type: text/plain>,
+# <Content-Transfer-Encoding: 7bit>>
 
 #########################################################################
-# Extract Data and assign to a hash
-# assign a hash to a variable containing data
-# use the variable and pass it the email container
+# Refactor section that need to be reworked
 #########################################################################
 # def print_console(simple_message)
 #   web_results = ''
