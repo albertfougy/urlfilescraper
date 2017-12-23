@@ -55,9 +55,6 @@ def return_results(xml_url)
   results
 end
 
-###################################################################################################
-# https://stackoverflow.com/questions/6674230/how-would-you-parse-a-url-in-ruby-to-get-the-main-domain
-###################################################################################################
 
 def run
   all_results = {}
