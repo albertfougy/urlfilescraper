@@ -82,7 +82,7 @@ end
 #  :first_byte=>"569", :start_render=>"4286", :speed_index=>"4779",
 # :dom_elements=>"3571", :time_fully_loaded=>"18624"}}
 
-# Results printed to console
+# Pretty printed email send results to console 
 
 # => <Mail::Message:70237463212660, Multipart: false, Headers: <Date: Fri, 22 Dec 
 # 2017 18:48:20 -0500>, <From: MYEMAILADDRESS>, <To: RECIPIENT EMAILADDRESS >, 
