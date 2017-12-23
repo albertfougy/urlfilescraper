@@ -8,41 +8,25 @@ require_relative 'SimpleMailerurl'
 
 # To run script
 # $:~/urlfilescraper$ irb -r ./url_file_scraper.rb
-# irb(main):001:0> run()
-
+# irb(main):001:0> run
 
 def get_xml_url(url)
-
   driver = Selenium::WebDriver.for :firefox
   driver.navigate.to 'http://www.webpagetest.org'
-  wait = Selenium::WebDriver::Wait.new(:timeout => 450)
-
-
-######################################################################
-# Select browser type . Need work into this script somehow.
-########################################################################
+  wait = Selenium::WebDriver::Wait.new(timeout: 450)
   option = Selenium::WebDriver::Support::Select.new(driver.find_element(name: 'browser'))
-  option.select_by(:value, 'IE11')
+  option.select_by(:value, 'IE11') # Select browser type
   input_url = driver.find_element(:id, 'url')
-  input_url.clear();
+  input_url.clear
   input_url.send_keys(url.to_s)
   driver.find_element(:id, 'start_test-container').click
-
   # Wait until results to appear
-  wait.until {
-    driver.find_element(:id, 'test_results-container')
-  }
-  ################################################
-  # Change 'result' url parameter into 'xmlResult'
-  # to read XML Version of webpagetest.org
-  ################################################
-  result_url= driver.current_url
+  wait.until { driver.find_element(:id, 'test_results-container') }
+  # Change 'result' url parameter into 'xmlResult' to read XML Version of webpagetest.org
+  result_url = driver.current_url
   driver.close
   result_url.gsub('result', 'xmlResult')
 end
-
-
-
 
 ##########################################################
 # Create a function in this section?
@@ -57,11 +41,10 @@ end
 # Loaded)
 
 ###################################################
-# REDUCED RESULTS TO ONE BLOCK
+# REDUCED results TO ONE BLOCK
 ####################################################
 def return_results(xml_url)
   doc = Nokogiri::XML(open(xml_url))
-
   results = {}
   results[:load_time] = doc.xpath('response//data//median//firstView//loadTime').text
   results[:first_byte] = doc.xpath('response//data//median//firstView//TTFB').text
@@ -75,38 +58,66 @@ end
 ###################################################################################################
 # https://stackoverflow.com/questions/6674230/how-would-you-parse-a-url-in-ruby-to-get-the-main-domain
 ###################################################################################################
-# Challenge to parse with malform url scheme. Cannot find a solution YET. Using http/s standard
-##################################################################################################
+
 def run
   all_results = {}
-  File.open("urls.txt", "r") do |file_handle|
+  File.open('urls.txt', 'r') do |file_handle|
     file_handle.each_line do |line|
-      nodes = get_xml_url(line)
+      xml_url = get_xml_url(line)
       host = URI.parse(line.strip).host.downcase # need to refactor for malform links
-      all_results[host] = return_results(nodes)
+      all_results[host] = return_results(xml_url)
     end
   end
   all_results
+  # runs barely with this included hack
+  email = SimpleMailer.simple_message('albert@fougy.com '\
+                                      , 'email trail run of hashes'\
+                                      , " #{all_results}")
+  email.deliver
 end
 
-# {:load_time=>"1891", :first_byte=>"401", :start_render=>"793", :speed_index=>"996",
-# :dom_elements=>"420", :time_fully_loaded=>"3825"}
-# {:load_time=>"17029", :first_byte=>"567", :start_render=>"2184", :speed_index=>"13849",
-# :dom_elements=>"3617", :time_fully_loaded=>"48256"}
-# => {"www.google.com"=>nil, "www.techcrunch.com"=>nil}
+# Results recieved by mail
 
-#############################################################################
+# irb(main):001:0> run
+# => {"google.com"=>{:load_time=>"985", :first_byte=>"767", :start_render=>"1083",
+#  :speed_index=>"1371",:dom_elements=>"375", :time_fully_loaded=>"2114"},
+#  "www.techcrunch.com"=>{:load_time=>"10848",
+#  :first_byte=>"569", :start_render=>"4286", :speed_index=>"4779",
+# :dom_elements=>"3571", :time_fully_loaded=>"18624"}}
+
+# Results printed to console
+
+# => <Mail::Message:70237463212660, Multipart: false, Headers: <Date: Fri, 22 Dec 
+# 2017 18:48:20 -0500>, <From: MYEMAILADDRESS>, <To: RECIPIENT EMAILADDRESS >, 
+# <Message-ID: <5a3d99c41f89a_11a0b3fe16f4417a070239@Als-iMac.fios-router.home.mail>>,
+#  <Subject: email trail run of hashes>, <Mime-Version: 1.0>, <Content-Type: text/plain>, 
+#  <Content-Transfer-Encoding: 7bit>> 
+
+#########################################################################
 # Extract Data and assign to a hash
 # assign a hash to a variable containing data
 # use the variable and pass it the email container
-##########################################################################
+#########################################################################
+# def print_console(simple_message)
+#   web_results = ''
+#   results.each do |key, value|
+#     value.each do |attri, info|
+#       puts "#{key}: #{attri} is #{info}"
+#       web_results += "#{key}: #{attri} is #{info}"
+#     end
+#   end
+#   puts web_results
+# end
+
+
+#########################################################################
 # MAIL SECTION
 #########################################################################
 
-#email = SimpleMailer.simple_message('al@fougy.com '\
-#                                    ,'email trail run of hashes'\
-#                                    ,'#{all_results}')
-#email.deliver
+# def email_send(simple_message)
+#   email = SimpleMailer.simple_message('albert@fougy.com '\
+#                                       , 'email trail run of hashes'\
+#                                       , print_console(simple_message))
+#   email.deliver
+# end
 ##########################################################################
-
-
