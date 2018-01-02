@@ -46,34 +46,15 @@ end
 def return_results(xml_url)
   doc = Nokogiri::XML(open(xml_url))
   results = {}
-  results[:load_time] = doc.xpath('response//data//median//firstView//loadTime').text
-  results[:first_byte] = doc.xpath('response//data//median//firstView//TTFB').text
-  results[:start_render] = doc.xpath('response//data//median//firstView//render').text
-  results[:speed_index] = doc.xpath('response//data//median//firstView//SpeedIndex').text
-  results[:dom_elements] = doc.xpath('response//data//median//firstView//domElements').text
-  results[:time_fully_loaded] = doc.xpath('response//data//median//firstView//fullyLoaded').text
+  results[:"Load Time"] = doc.xpath('response//data//median//firstView//loadTime').text
+  results[:"First Byte"] = doc.xpath('response//data//median//firstView//TTFB').text
+  results[:"Start Render"] = doc.xpath('response//data//median//firstView//render').text
+  results[:"Speed Index"]= doc.xpath('response//data//median//firstView//SpeedIndex').text
+  results[:"DOM Elements"] = doc.xpath('response//data//median//firstView//domElements').text
+  results[:"Time"] = doc.xpath('response//data//median//firstView//fullyLoaded').text
   results
 end
 
-
-# def run
-#   all_results = {}
-#   File.open('urls.txt', 'r') do |file_handle|
-#     file_handle.each_line do |line|
-#       xml_url = get_xml_url(line)
-#       host = URI.parse(line.strip).host.downcase # need to refactor for malform links
-#       all_results[host] = return_results(xml_url)
-#     end
-#   end
-#   all_results
-#   # runs barely with this included hack
-#   email = SimpleMailer.simple_message('albert@fougy.com '\
-#                                       , 'email trail run of hashes'\
-#                                       , " #{all_results}")
-#   email.deliver
-# end
-
-# Need to be broken into two more methods. Too long.
 def run
   all_results = {}
   web_results = ""
@@ -91,68 +72,46 @@ def run
       web_results
     end
   end
-  all_results
 
   # hack
-  email = SimpleMailer.simple_message('albert@fougy.com '\
-                                      , 'email trail run of hashes'\
+  email = SimpleMailer.simple_message('albert@fougy.com'\
+                                      , 'More urls for good measure'\
                                       , "#{web_results}")
   email.deliver
 end
 
 # Results by console and email
 
-# 2.4.1 :001 > run
-# google.com: load_time is 1507
-# google.com: first_byte is 513
-# google.com: start_render is 789
-# google.com: speed_index is 965
-# google.com: dom_elements is 375
-# google.com: time_fully_loaded is 1679
-# google.com: load_time is 1507
-# google.com: first_byte is 513
-# google.com: start_render is 789
-# google.com: speed_index is 965
-# google.com: dom_elements is 375
-# google.com: time_fully_loaded is 1679
-# www.techcrunch.com: load_time is 10679
-# www.techcrunch.com: first_byte is 465
-# www.techcrunch.com: start_render is 8562
-# www.techcrunch.com: speed_index is 8584
-# www.techcrunch.com: dom_elements is 3607
-# www.techcrunch.com: time_fully_loaded is 17264
+# google.com: Load Time is 955
+# google.com: First Byte is 552
+# google.com: Start Render is 1178
+# google.com: Speed Index is 1470
+# google.com: DOM Elements is 375
+# google.com: Time is 2263
+# www.techcrunch.com: Load Time is 10698
+# www.techcrunch.com: First Byte is 670
+# www.techcrunch.com: Start Render is 8790
+# www.techcrunch.com: Speed Index is 12270
+# www.techcrunch.com: DOM Elements is 3556
+# www.techcrunch.com: Time is 28637
+# albertfougy.com: Load Time is 3818
+# albertfougy.com: First Byte is 319
+# albertfougy.com: Start Render is 1391
+# albertfougy.com: Speed Index is 1576
+# albertfougy.com: DOM Elements is 597
+# albertfougy.com: Time is 3895
+# codebuddies.org: Load Time is 4189
+# codebuddies.org: First Byte is 1087
+# codebuddies.org: Start Render is 4570
+# codebuddies.org: Speed Index is 4684
+# codebuddies.org: DOM Elements is 360
+# codebuddies.org: Time is 16632
 
 # Pretty printed email send results to console
 
 # => #<Mail::Message:70334122941920, Multipart: false, Headers: <Date: Fri, 22 Dec 2017 20:27:25 -0500>,
-# <From: alfougy@gmail.com>, <To: albert@fougy.com >, <Message-ID:
-# <5a3db0fd788a8_11e8e3ff7f043f78811978@Als-iMac.fios-router.home.mail>>,
+# <From: myemailaddress>, <To: recipient's email address >, <Message-ID:
+# <gobblygook@my-iMac.fios-router.home.mail>>,
 # <Subject: email trail run of hashes>, <Mime-Version: 1.0>, <Content-Type: text/plain>,
 # <Content-Transfer-Encoding: 7bit>>
 
-#########################################################################
-# Refactor section that need to be reworked
-#########################################################################
-# def print_console(simple_message)
-#   web_results = ''
-#   results.each do |key, value|
-#     value.each do |attri, info|
-#       puts "#{key}: #{attri} is #{info}"
-#       web_results += "#{key}: #{attri} is #{info}"
-#     end
-#   end
-#   puts web_results
-# end
-
-
-#########################################################################
-# MAIL SECTION
-#########################################################################
-
-# def email_send(simple_message)
-#   email = SimpleMailer.simple_message('albert@fougy.com '\
-#                                       , 'email trail run of hashes'\
-#                                       , print_console(simple_message))
-#   email.deliver
-# end
-##########################################################################
