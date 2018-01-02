@@ -58,7 +58,8 @@ end
 def run
   all_results = {}
   web_results = ""
-  File.open('urls.txt', 'r') do |file_handle|
+
+  File.open('urls.txt','r') do |file_handle|
     file_handle.each_line do |line|
       xml_url = get_xml_url(line)
       host = URI.parse(line.strip).host.downcase # need to refactor for malform links
@@ -66,10 +67,10 @@ def run
       all_results.each do |key, value|
         value.each do |attri, info|
           puts "#{key}: #{attri} is #{info}"
-          web_results += "#{key}: #{attri} is #{info} \n"
+          web_results += "#{key}: The #{attri} result is #{info} \n"
         end
       end
-      web_results
+     web_results
     end
   end
 
