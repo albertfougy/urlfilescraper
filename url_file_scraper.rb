@@ -55,6 +55,14 @@ def return_results(xml_url)
   results
 end
 
+# def check_url( test_url)
+#   # skip the line if it's a malformed URL TODO: gather these and report them
+#   if test_url !~ /^((http|https):\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
+#     puts ' [INVALID URL]'
+#   end
+#   return test_url
+# end
+
 def run
   all_results = {}
   web_results = ""
@@ -66,8 +74,9 @@ def run
       all_results[host] = return_results(xml_url)
       all_results.each do |key, value|
         value.each do |attri, info|
-          puts "#{key}: #{attri} is #{info}"
-          web_results += "#{key}: The #{attri} result is #{info} \n"
+          puts "#{key.chomp}: The #{attri} result is: #{info}"
+          web_results += "#{key.chomp}: The #{attri} result is: #{info}\n"
+# "#{line_num += 1} #{line}"
         end
       end
      web_results
@@ -76,7 +85,7 @@ def run
 
   # hack
   email = SimpleMailer.simple_message('albert@fougy.com'\
-                                      , 'More urls for good measure'\
+                                      , 'Formatted the results. Have to work on 1 line per url'\
                                       , "#{web_results}")
   email.deliver
 end

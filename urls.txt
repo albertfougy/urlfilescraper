@@ -1,2 +1,4 @@
 http://google.com
 http://www.techcrunch.com
+http://albertfougy.com
+http://codebuddies.org
