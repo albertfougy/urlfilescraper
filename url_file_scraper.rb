@@ -71,7 +71,7 @@ def run
   end
 
   # hack
-  email = SimpleMailer.simple_message('joshuakemp85@gmail.com'\
+  email = SimpleMailer.simple_message('recipientEMAILADDRESS'\
                                       , 'Formatted the results. Fixed urls.txt problem.'\
                                       , "#{web_results}")
   email.deliver
