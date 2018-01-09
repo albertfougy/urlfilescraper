@@ -79,8 +79,8 @@ def run
   end
 
   # hack
-  email = SimpleMailer.simple_message('albert@fougy.com'\
-                                      , 'Formatted the results. Have to work on 1 line per url'\
+  email = SimpleMailer.simple_message('joshuakemp85@gmail.com'\
+                                      , 'Formatted the results. Fixed urls.txt problem.'\
                                       , "#{web_results}")
   email.deliver
 end
@@ -88,16 +88,4 @@ end
 
 
 
-
-# stain88 [6:40 AM]
-# i think it might just be because you’re printing `all_results.each` inside the `File.open` block,
-# so when it’s reading url 2, it prints url 1 + 2, when reading url 3, it prints url 1 + 2 + 3, etc
-
-
-# [6:40]
-# which kinda “adds up” to your output
-
-
-# [6:41]
-# you can just do that printing loop after you end the `File.open` block
 
