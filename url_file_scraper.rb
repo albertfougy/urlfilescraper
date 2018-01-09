@@ -40,7 +40,7 @@ end
 ####################################################
 def return_results(xml_url)
   doc = Nokogiri::XML(open(xml_url))
-  results = {}
+  results = Hash.new
   results[:"Load Time"] = doc.xpath('response//data//median//firstView//loadTime').text
   results[:"First Byte"] = doc.xpath('response//data//median//firstView//TTFB').text
   results[:"Start Render"] = doc.xpath('response//data//median//firstView//render').text
@@ -52,7 +52,7 @@ end
 
 
 def run
-  all_results = {}
+  all_results = Hash.new
   web_results = ""
 
   File.open('urls.txt','r') do |file_handle|
@@ -71,7 +71,7 @@ def run
   end
 
   # hack
-  email = SimpleMailer.simple_message('recipientEMAILADDRESS'\
+  email = SimpleMailer.simple_message('albert@fougy.com'\
                                       , 'Formatted the results. Fixed urls.txt problem.'\
                                       , "#{web_results}")
   email.deliver
