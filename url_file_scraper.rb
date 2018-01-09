@@ -50,14 +50,6 @@ def return_results(xml_url)
   results
 end
 
-# def check_url( test_url)
-#   # skip the line if it's a malformed URL TODO: gather these and report them
-#   if test_url !~ /^((http|https):\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
-#     puts ' [INVALID URL]'
-#   end
-#   return test_url
-# end
-
 
 def run
   all_results = {}
