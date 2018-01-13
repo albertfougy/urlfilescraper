@@ -40,7 +40,7 @@ end
 ####################################################
 def return_results(xml_url)
   doc = Nokogiri::XML(open(xml_url))
-  results = Hash.new
+  results = {}
   results[:"Load Time"] = doc.xpath('response//data//median//firstView//loadTime').text
   results[:"First Byte"] = doc.xpath('response//data//median//firstView//TTFB').text
   results[:"Start Render"] = doc.xpath('response//data//median//firstView//render').text
@@ -52,7 +52,7 @@ end
 
 
 def run
-  all_results = Hash.new
+  all_results = {}
   web_results = ""
 
   File.open('urls.txt','r') do |file_handle|
@@ -63,21 +63,25 @@ def run
     end
   end
 
-  all_results.each do |key, value|
+  # print not puts on separate line,but don't iterate together.
+  all_results.each do |domain, value|
+    print "#{domain}: "
+    web_results +="#{domain}: "
     value.each do |attri, info|
-      puts "#{key.chomp}: The #{attri} result is: #{info}"
-      web_results += "#{key.chomp}: The #{attri} result is: #{info}\n"
+      print "The #{attri} result is: #{info} "
+      web_results +="The #{attri} result is: #{info} "
     end
+    puts "\n"
   end
-
-  # hack
-  email = SimpleMailer.simple_message('albert@fougy.com'\
+  # send results to recipient via email
+  email = SimpleMailer.simple_message('recipient address'\
                                       , 'Formatted the results. Fixed urls.txt problem.'\
                                       , "#{web_results}")
   email.deliver
 end
 
-
+# call from terminal=> ruby url_file_scraper.rb
+run
 
 
 
