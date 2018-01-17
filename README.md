@@ -1,29 +1,14 @@
-# URL File Scraper
+# Web page performance metrics testing tool.
 
+There are some exceptions in running this script as it is being continuously developed.
+1. In SimplerMailer.rb replace ":user_name => 'EMAIL',:password => 'PASSWORD'"
+   with your FULL email (example@gmail.com) and password for your gmail smtp settings.
 
-We want to take our web page performance metrics script from being just a little
-script that handles 1 "hard coded" url, to a full blown testing tool.
+2. To run script (inside the directory): ruby url_file_scraper.rb
 
-Step 1:
-Remove the "hard coded" url that I was currently using in my last script.
+3. You can adjust browser timeout on line 17:=> (timeout: 60)
 
-Run my script - it will fail :-)
+4. "require_relative 'SimpleMailerurl'" in url_file_scraper.rb is not a mistake.
+   You need to include this call to load the Simple Mailer file or you will get an error.
 
-Step 2:
-Make a file that has 1 url in it.  Call it something like urls.txt
-
-Step 3:
-Read the urls from that file.  How?  I recommend Googling:
-
-"Ruby bastards reading a file"
-
-Make it so my script pass again like it was.
-
-Step 4:
-Add 3 more urls to the urls.txt file and then get my script to pass.
-
-NOTE: I need to modify my script some and make sure the email includes the
-performance metrics for each url that was in the urls.txt file.
-
-If I can do the above ( it will be challenging ), I can honestly say that
-I know the "basics of coding"!
+5. Include either "http" or "https" for your url text entries.
