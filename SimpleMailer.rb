@@ -13,8 +13,8 @@ ActionMailer::Base.smtp_settings = {
 
 class SimpleMailer < ActionMailer::Base
   def simple_message(recipient, subject, message)
-    mail(:from => 'sendersgmailaddress',
-         :to => recipient,
+    mail(:from => 'SENDER GMAIL',
+         :to => recipientS,
          :subject => subject,
          :body => message)
   end
