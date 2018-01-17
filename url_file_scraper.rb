@@ -4,16 +4,13 @@ require 'pp'
 require 'open-uri'
 require 'uri'
 require 'selenium-webdriver'
-require_relative 'SimpleMailerurl'
+require_relative 'Simple-Mailer'
 
-# To run script
-# $:~/urlfilescraper$ irb -r ./url_file_scraper.rb
-# irb(main):001:0> run
 
 def get_xml_url(url)
   driver = Selenium::WebDriver.for :firefox
   driver.navigate.to 'http://www.webpagetest.org'
-  wait = Selenium::WebDriver::Wait.new(timeout: 450)
+  wait = Selenium::WebDriver::Wait.new(timeout: 300)
   option = Selenium::WebDriver::Support::Select.new(driver.find_element(name: 'browser'))
   option.select_by(:value, 'IE11') # Select browser type
   input_url = driver.find_element(:id, 'url')
@@ -28,16 +25,9 @@ def get_xml_url(url)
   result_url.gsub('result', 'xmlResult')
 end
 
+# Parsing the webpage performance server response
+# Extracting data values
 
-# You need to MATCH SPECIFIC NODE NAME and NODE TEXT
-# The fields that I need to extract the data
-# Load Time, First Byte,
-# Start Render, Speed Index, DOM Elements, Time (Fully
-# Loaded)
-
-###################################################
-# REDUCED results TO ONE BLOCK
-####################################################
 def return_results(xml_url)
   doc = Nokogiri::XML(open(xml_url))
   results = {}
@@ -59,11 +49,13 @@ def run
     file_handle.each_line do |line|
       xml_url = get_xml_url(line)
       host = URI.parse(line.strip).host.downcase
+      print "Successfully read #{line}"
       all_results[host] = return_results(xml_url)
     end
   end
+  puts "\n\n"
 
-  # print not puts on separate line,but don't iterate together.
+  # print the results on separate lines
   all_results.each do |domain, value|
     print "#{domain}: "
     web_results +="#{domain}: "
@@ -73,14 +65,16 @@ def run
     end
     puts "\n"
   end
+
   # send results to recipient via email
-  email = SimpleMailer.simple_message('recipient address'\
-                                      , 'Formatted the results. Fixed urls.txt problem.'\
+  email = SimpleMailer.simple_message('albert@fougy.com'\
+                                      ,'printed not puts the results per domain'\
                                       , "#{web_results}")
   email.deliver
 end
 
-# call from terminal=> ruby url_file_scraper.rb
+# this starts the script.
+# Run the script: ruby url_file_scraper.rb
 run
 
 
